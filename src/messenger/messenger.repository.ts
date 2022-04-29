@@ -17,6 +17,10 @@ export class MessengerRepository extends BaseRepository<MessengerEntity> {
   ) {
     super();
   }
+  public async getMessenger(id: string): Promise<MessengerEntity | Error> {
+    return (await this.messengerEntity.findOneAsync({ id: id })).toJSON();
+  }
+
   public async createMessenger(
     payload: CreateMessengerDto,
   ): Promise<MessengerEntity | Error> {
@@ -31,14 +35,6 @@ export class MessengerRepository extends BaseRepository<MessengerEntity> {
       return new Error('Could not create user!');
     }
   }
-
-  public async getMessenger(id: string): Promise<MessengerEntity | Error> {
-    try {
-      return (await this.messengerEntity.findOneAsync({ id: id })).toJSON();
-    } catch (e) {
-      return new Error('khong tim ra');
-    }
-  }
   public async updateMessenger(
     id: string,
     content: string,
@@ -51,6 +47,7 @@ export class MessengerRepository extends BaseRepository<MessengerEntity> {
       return new Error('khum cap nhat dc be oii!');
     }
   }
+
   public async deleteMessenger(id: string): Promise<Error> {
     try {
       await this.messengerEntity.deleteAsync({ id: id });

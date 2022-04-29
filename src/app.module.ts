@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MessengerModule } from './messenger/messenger.module';
-import { ExpressCassandraModule } from 'nestjs-express-cassandra';
+import {
+  ExpressCassandraModule,
+  ExpressCassandraModuleOptions,
+} from 'nestjs-express-cassandra';
 import { cassandraConfigs } from './config/cassandra.config';
-import { ExpressCassandraModuleOptions } from 'nestjs-express-cassandra';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -10,6 +13,7 @@ import { ExpressCassandraModuleOptions } from 'nestjs-express-cassandra';
     ExpressCassandraModule.forRoot(
       <ExpressCassandraModuleOptions>cassandraConfigs,
     ),
+    RedisModule,
   ],
   controllers: [],
   providers: [],
