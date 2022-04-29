@@ -22,24 +22,24 @@ export class MessengerService {
       id: randomUUID(),
       ...createMessenger,
     };
-
-    await this.cacheManager.set(payload.id, payload.content, {
-      ttl: payload.timeout,
-    });
-    const res = await this.cacheManager.get(payload.id);
-    return await this.messengerRepository.createMessenger(payload);
+    if (payload.timeout == null) {
+      return await this.messengerRepository.createMessenger(payload);
+    } else {
+      await this.cacheManager.set(payload.id, payload.content, {
+        ttl: payload.timeout,
+      });
+      await this.cacheManager.get(payload.id);
+      await this.nrpClient.on('__keyevent@0__:expired', (data) => {
+        console.log(data);
+        return this.messengerRepository.deleteMessenger(data);
+      });
+      return await this.messengerRepository.createMessenger(payload);
+    }
   }
   async update(id: string, content: string): Promise<MessengerEntity | Error> {
     return await this.messengerRepository.updateMessenger(id, content);
   }
   async delete(id: string) {
     return await this.messengerRepository.deleteMessenger(id);
-  }
-  async readIdMessenger(id: string) {
-    await this.nrpClient.on('__keyevent@0__:expired', (data) => {
-      console.log(data);
-      return this.messengerRepository.deleteMessenger(data);
-    });
-    return 'hello';
   }
 }
