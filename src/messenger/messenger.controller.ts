@@ -53,8 +53,4 @@ export class MessengerController {
       throw new RpcException(e as string);
     }
   }
-  // @Get()
-  // async getHello(): Promise<string> {
-  //   return await this.messengerService.readIdMessenger();
-  // }
 }

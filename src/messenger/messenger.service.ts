@@ -31,7 +31,6 @@ export class MessengerService {
       await this.cacheManager.get(payload.id);
       await this.nrpClient.on('__keyevent@0__:expired', (data) => {
         console.log(data);
-        return this.messengerRepository.deleteMessenger(data);
       });
       return await this.messengerRepository.createMessenger(payload);
     }

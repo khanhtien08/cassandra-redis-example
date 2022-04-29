@@ -28,7 +28,7 @@ export class MessengerRepository extends BaseRepository<MessengerEntity> {
       const messenger = new this.messengerEntity({
         ...payload,
       });
-      await messenger.saveAsync();
+      await messenger.saveAsync({ ttl: payload.timeout });
       return messenger.toJSON();
     } catch (e) {
       this.logger.error(e);
