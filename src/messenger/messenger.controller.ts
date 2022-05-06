@@ -10,9 +10,7 @@ import {
 import { MessengerService } from './messenger.service';
 import { CreateMessengerDto } from '../dto/messenger.dto';
 import { MessengerEntity } from './messenger.entity';
-import { RpcException } from '@nestjs/microservices/exceptions/rpc-exception';
 import { HttpService } from '@nestjs/axios';
-import { CreateTracingOptions } from 'trace_events';
 
 const KEY = 'hello';
 @Controller('messenger')
@@ -34,9 +32,10 @@ export class MessengerController {
     return await this.messengerService.findId(userId);
   }
   @Delete(':id')
-  async deleteMessenger(@Param() messenger: CreateMessengerDto) {
-    const mess = await this.messengerService.delete(messenger.id);
-    return mess;
+  async deleteMessenger(
+    @Param() messenger: CreateMessengerDto,
+  ): Promise<Error> {
+    return await this.messengerService.delete(messenger.id);
   }
 
   @Put()
@@ -49,18 +48,4 @@ export class MessengerController {
       messing.timeout,
     );
   }
-  // async updateMessenger(
-  //   @Body() messing: CreateMessengerDto,
-  // ): Promise<MessengerEntity> {
-  //   try {
-  //     const mess = await this.messengerService.update(
-  //       messing.id,
-  //       messing.content,
-  //     );
-  //     if (mess instanceof Error) throw mess;
-  //     return mess;
-  //   } catch (e) {
-  //     throw new RpcException(e as string);
-  //   }
-  // }
 }
