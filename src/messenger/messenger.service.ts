@@ -35,8 +35,12 @@ export class MessengerService {
       return await this.messengerRepository.createMessenger(payload);
     }
   }
-  async update(id: string, content: string): Promise<MessengerEntity | Error> {
-    return await this.messengerRepository.updateMessenger(id, content);
+  async update(
+    id: string,
+    content: string,
+    timeout: number,
+  ): Promise<MessengerEntity | Error> {
+    return await this.messengerRepository.updateMessenger(id, content, timeout);
   }
   async delete(id: string) {
     return await this.messengerRepository.deleteMessenger(id);

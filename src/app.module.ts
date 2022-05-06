@@ -5,7 +5,6 @@ import {
   ExpressCassandraModuleOptions,
 } from 'nestjs-express-cassandra';
 import { cassandraConfigs } from './config/cassandra.config';
-import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -13,7 +12,6 @@ import { RedisModule } from './redis/redis.module';
     ExpressCassandraModule.forRoot(
       <ExpressCassandraModuleOptions>cassandraConfigs,
     ),
-    RedisModule,
   ],
   controllers: [],
   providers: [],

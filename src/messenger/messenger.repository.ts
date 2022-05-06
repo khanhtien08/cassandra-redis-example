@@ -38,9 +38,13 @@ export class MessengerRepository extends BaseRepository<MessengerEntity> {
   public async updateMessenger(
     id: string,
     content: string,
+    timeout: number,
   ): Promise<MessengerEntity | Error> {
     try {
-      await this.messengerEntity.updateAsync({ id: id }, { content: content });
+      await this.messengerEntity.updateAsync(
+        { id: id },
+        { content: content, timeout: timeout },
+      );
       return (await this.messengerEntity.findOneAsync({ id: id })).toJSON();
     } catch (e) {
       this.logger.error(e);

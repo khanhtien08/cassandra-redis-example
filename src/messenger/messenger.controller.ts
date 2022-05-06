@@ -12,6 +12,7 @@ import { CreateMessengerDto } from '../dto/messenger.dto';
 import { MessengerEntity } from './messenger.entity';
 import { RpcException } from '@nestjs/microservices/exceptions/rpc-exception';
 import { HttpService } from '@nestjs/axios';
+import { CreateTracingOptions } from 'trace_events';
 
 const KEY = 'hello';
 @Controller('messenger')
@@ -23,7 +24,7 @@ export class MessengerController {
 
   @Post()
   async createMessenger(@Body() createMessenger: CreateMessengerDto) {
-    this.messengerService.create(createMessenger);
+    return this.messengerService.create(createMessenger);
   }
 
   @Get(':userId')
@@ -38,19 +39,28 @@ export class MessengerController {
     return mess;
   }
 
-  @Put(':id')
+  @Put()
   async updateMessenger(
     @Body() messing: CreateMessengerDto,
-  ): Promise<MessengerEntity> {
-    try {
-      const mess = await this.messengerService.update(
-        messing.id,
-        messing.content,
-      );
-      if (mess instanceof Error) throw mess;
-      return mess;
-    } catch (e) {
-      throw new RpcException(e as string);
-    }
+  ): Promise<MessengerEntity | Error> {
+    return await this.messengerService.update(
+      messing.id,
+      messing.content,
+      messing.timeout,
+    );
   }
+  // async updateMessenger(
+  //   @Body() messing: CreateMessengerDto,
+  // ): Promise<MessengerEntity> {
+  //   try {
+  //     const mess = await this.messengerService.update(
+  //       messing.id,
+  //       messing.content,
+  //     );
+  //     if (mess instanceof Error) throw mess;
+  //     return mess;
+  //   } catch (e) {
+  //     throw new RpcException(e as string);
+  //   }
+  // }
 }
