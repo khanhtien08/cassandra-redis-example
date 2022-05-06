@@ -4,6 +4,7 @@ import { MessengerEntity } from './messenger.entity';
 import { CreateMessengerDto } from '../dto/messenger.dto';
 import { randomUUID } from 'crypto';
 import { Cache } from 'cache-manager';
+import { createDeflateRaw } from 'zlib';
 
 const NRP = require('node-redis-pubsub');
 
@@ -40,7 +41,27 @@ export class MessengerService {
     content: string,
     timeout: number,
   ): Promise<MessengerEntity | Error> {
-    return await this.messengerRepository.updateMessenger(id, content, timeout);
+    if (timeout == null) {
+      return await this.messengerRepository.updateMessenger(
+        id,
+        content,
+        timeout,
+      );
+    } else {
+      await this.cacheManager.set(id, content, {
+        ttl: timeout,
+      });
+      await this.cacheManager.get(id);
+      await this.nrpClient.on('__keyevent@0__:expired', (data) => {
+        console.log(data);
+        return this.messengerRepository.deleteMessenger(data);
+      });
+      return await this.messengerRepository.updateMessenger(
+        id,
+        content,
+        timeout,
+      );
+    }
   }
   async delete(id: string): Promise<Error> {
     return await this.messengerRepository.deleteMessenger(id);
