@@ -26,6 +26,7 @@ describe('AppController (e2e)', () => {
       content: 'khanh tien',
       timeout: 25,
     };
+
     return request(server)
       .post(`/messenger/`)
       .send(Messenger)
@@ -40,6 +41,7 @@ describe('AppController (e2e)', () => {
   it('Timeout must be a Number', function () {
     const userId = '5f28025a-cac8-40d5-87d4-63e2ab84851a';
     const time = { timeout: 'invalid timeout' };
+
     return request(server)
       .put(`/messenger/${userId}`)
       .send(time)
@@ -59,11 +61,13 @@ describe('AppController (e2e)', () => {
         timeout: 23,
       },
     ];
+
     return request(server).put('/messenger').send(updateMess).expect(200);
   });
 
   it('should get a messenger', () => {
     const messID = '49ab9d17-5f0b-423d-85fb-77c715bb9d2b';
+
     return request(server).get(`/messenger/${messID}`).expect(200);
   });
 
@@ -77,6 +81,7 @@ describe('AppController (e2e)', () => {
 
   it('could delete messenger', function () {
     const messID = '3ce114d4-ec8e-4192-8f64-a5e1789b6032';
+
     return request(server).delete(`/messenger/${messID}`).expect(200);
   });
 
