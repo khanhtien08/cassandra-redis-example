@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { MessengerService } from './messenger.service';
 import { CreateMessengerDto } from '../dto/messenger.dto';
-import { MessengerEntity } from './messenger.entity';
 
 @Controller('messenger')
 export class MessengerController {
@@ -9,12 +8,18 @@ export class MessengerController {
 
   @Post()
   async createMessenger(@Body() createMessenger: CreateMessengerDto) {
-    return this.messengerService.indexMessenger(createMessenger);
+    console.log(createMessenger);
+    return this.messengerService.insert(createMessenger);
   }
 
   @Delete(':id')
   async deleteMessenger(@Param() messenger: CreateMessengerDto) {
     return await this.messengerService.delete(messenger.id);
+  }
+
+  @Put()
+  async updateMessenger(@Body() messenger: CreateMessengerDto) {
+    return await this.messengerService.update(messenger);
   }
 
   @Get('search')

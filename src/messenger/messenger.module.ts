@@ -23,6 +23,6 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 export class MessengerModule implements OnModuleInit {
   constructor(private readonly elasticsearchService: MessengerService) {}
   public async onModuleInit() {
-    await this.elasticsearchService.createMessenger();
+    await this.elasticsearchService.createIndexMessenger();
   }
 }
