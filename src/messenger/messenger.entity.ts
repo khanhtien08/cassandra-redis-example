@@ -11,6 +11,7 @@ export class MessengerEntity {
   @Column({ type: 'text' })
   content: string;
 
+
   @Column({ type: 'int' })
   timeout: number;
 }

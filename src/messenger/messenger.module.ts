@@ -1,18 +1,15 @@
-import { CacheModule, Module } from '@nestjs/common';
-import { ExpressCassandraModule } from 'nestjs-express-cassandra';
+import { CacheModule, Module, OnModuleInit } from '@nestjs/common';
 import { MessengerService } from './messenger.service';
 import { MessengerController } from './messenger.controller';
-import { MessengerEntity } from './messenger.entity';
-import { MessengerRepository } from './messenger.repository';
-import { HttpModule } from '@nestjs/axios';
 import * as redisStore from 'cache-manager-redis-store';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 @Module({
   imports: [
-    ExpressCassandraModule.forFeature([MessengerEntity]),
-    HttpModule.register({
-      timeout: 1000,
-      maxRedirects: 4,
+    ElasticsearchModule.register({
+      node: 'http://10.10.15.21:9200',
+      maxRetries: 5,
+      requestTimeout: 60000,
     }),
     CacheModule.register({
       store: redisStore,
@@ -20,7 +17,12 @@ import * as redisStore from 'cache-manager-redis-store';
       port: 6379,
     }),
   ],
-  providers: [MessengerService, MessengerRepository],
+  providers: [MessengerService],
   controllers: [MessengerController],
 })
-export class MessengerModule {}
+export class MessengerModule implements OnModuleInit {
+  constructor(private readonly elasticsearchService: MessengerService) {}
+  public async onModuleInit() {
+    await this.elasticsearchService.createIndexMessenger();
+  }
+}
