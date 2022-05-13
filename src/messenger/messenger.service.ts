@@ -49,7 +49,7 @@ export class MessengerService {
               },
               content: {
                 type: 'text',
-                analyzer: 'myfolding',
+                analyzer: 'my_folding',
                 search_analyzer: 'standard',
               },
               timeout: {
@@ -63,7 +63,7 @@ export class MessengerService {
   }
 
   async insert(message: MessengerEntity) {
-    const a = await this.elasticsearchService.index({
+    return await this.elasticsearchService.index({
       index: this.index,
       body: {
         id: randomUUID(),
@@ -109,11 +109,9 @@ export class MessengerService {
   }
 
   async delete(messId: string) {
-    const mess = await this.elasticsearchService.delete({
+    return await this.elasticsearchService.delete({
       index: this.index,
       id: messId,
     });
-
-    return mess;
   }
 }
